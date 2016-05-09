@@ -1,0 +1,98 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>${tableModel.tableNameCN}列表--$!{projct_name_zh}</title>
+	<jsp:include page="../header.jsp" />
+<link href="${baseUrl}/css/grid.css" rel="stylesheet" type="text/css" />
+<script  src="${baseUrl}/js/grid.js"></script>
+<script>
+    gridobj.gridJson = ${(json==null)?"[]":json};
+    gridobj.vPath='/';
+    gridobj.sumNum  = ${(page==null)?0:page.totalCount};
+   	gridobj.curPage = ${(page==null)?0:page.currentPage};
+    gridobj.pageNum = ${(page==null)?0:page.pageSize};
+    gridobj.totalPages  = ${(page==null)?0:page.totalPages};
+	gridobj.columns=[
+#foreach($fieldName in $tableModel.columnName)
+		{ "name":"$!{tableModel.columnNameCN.get($foreach.index)}",        "width":"20%", "sortable":"false", "field":"$!{stringUtil.uncapitalize($fieldName)}"},
+#end	
+		{ "name":"操作",         "width":"20%",  "sortable":"true", "function":operat}
+		];
+	gridobj.showCol=new Array(#foreach($fieldName in $tableModel.columnName)$foreach.index,#end${tableModel.columnName.size()});
+	//如果为末发布产品的话，同取autoid作为标识	
+    gridobj.chkName="$!{tableModel.pk}";
+	gridobj.isSelectCol=0;
+	gridobj.formName = "sform";
+	//显示模板状态信息
+	//如果为末发布产品的话，同取autoid作为标识 
+    gridobj.chkField='id';
+	 function operat(n){
+	 	var id = gridobj.gridJson[n]['$!{tableModel.pk}'];
+		var edit = "<a href='${baseUrl}/${admin_path}$!{stringUtil.uncapitalize($!{tableModel.tableName})}/$!{stringUtil.uncapitalize($!{tableModel.tableName})}Edit?$!{tableModel.pk}=" + id + "'>[编辑]</a>";	
+		return edit;
+	 }
+	//放入回收站、发布、暂不发布、选择模板等操作
+	function todoAction(){
+		//判断用户选择了什么操作
+		var opera =  $(":input:checked[name='operate']").attr("value");
+		if(!opera){
+			alert("先选择你要进行的操作！");
+			return ;
+		}
+		if($(":input:checked[name='"+gridobj.chkName+"']").size()==0){
+			alert("你还没有选择游戏,请至少要选择一个！");
+			return ;
+		}
+		var actionName = "";
+		switch(opera){
+			case 'recycle':
+				if(confirm("永久删除？")){
+					actionName = "${baseUrl}/${admin_path}$!{stringUtil.uncapitalize($!{tableModel.tableName})}/$!{stringUtil.uncapitalize($!{tableModel.tableName})}Del";
+					document.sform.action = actionName;
+					document.sform.submit();
+					break;
+				}else{
+					return ;
+				}
+			default:
+				return ;
+		}
+	}
+</script>
+</head>
+
+<body>
+	<div class="base">
+		<div class="base_body">
+				<div id="jobs_app_manage">
+					<div class="c_top">
+						<div class="nav_bar" style="clear:both; margin:0px;">
+							<div style="float:left">当前位置: ${projct_name_zh} &gt; ${tableModel.tableNameCN}</div>
+							<div style="float:right">
+									<input type="button" onclick="location.href='${baseUrl}/${admin_path}$!{stringUtil.uncapitalize($!{tableModel.tableName})}/$!{stringUtil.uncapitalize($!{tableModel.tableName})}Edit';" value="添加 ${tableModel.tableNameCN}">&nbsp; 
+							</div>
+						 </div>
+						<form id="sform" name="sform" action="${baseUrl}/${admin_path}$!{stringUtil.uncapitalize($!{tableModel.tableName})}/$!{stringUtil.uncapitalize($!{tableModel.tableName})}List" method="post" style="margin:0;padding:0">
+							<div id="sformError"  style="background:#C26666 none repeat scroll 0 0"></div>
+							<div class="sResult">
+				            	 <div id="thgrid_div"><script>gridobj.showTable();</script></div>
+				                 	 <div id="operatediv" style="display:none">
+				                       	 全部&nbsp;操作：
+				                        <input type="radio" name="operate" value="recycle" onclick="javascript:$('#sssj').hide();"/>永久删除
+				                        <input onclick="todoAction();" type="button" name="button2" id="button2" value="确定" class="btn_1" style="cursor:hand" />
+							 		 </div>
+							   	 <script>gridobj.setDiv2Bottom("operatediv");</script>
+			          		</div>
+		          		</form>
+					</div>
+				</div>
+			</div>
+			<div style="clear:both"></div>
+	</div>
+	<jsp:include page="../footer.jsp" />
+</body>
+</html>

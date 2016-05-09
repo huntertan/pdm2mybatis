@@ -1,0 +1,62 @@
+<%@ page contentType="text/html;charset=GBK"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ page import="com.~package~.~formName~.bean.*" %>
+<%
+
+%>
+<html>
+<head>
+<meta http-equiv="Content-Language" content="zh-cn">
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>查询</title>   
+<link href="<%=request.getContextPath()%>/styles/styles_button.css" rel="stylesheet" type="text/css" />
+<link href="<%=request.getContextPath()%>/styles/styles_list_find.css" rel="stylesheet" type="text/css">
+<script language="javascript">
+function find(){
+	document.~formName~.action="<%=request.getContextPath()%>/~formName~List.do?action=iframe_luru";
+	document.~formName~.submit();
+}
+</script> 
+</head>
+
+<body scroll="no" style="border:0">
+<html:form action="/~formName~Add" target="inner">
+<table  border="0" cellpadding="0" cellspacing="0" class="navigation_table">
+        <tr>
+          <td  class="navigation_pic0"></td>
+          <td  class="navigation_title">您现在的位置是：</td>
+          <td  class="navigation_pic1">~formNameCN~</td>
+          <td  class="navigation_pic2">~formNameCN~查询</td>
+        </tr>
+</table>
+<table width="100%" border="0" cellpadding="3" cellspacing="1" class="table_find">
+  <tr >
+    <td height="23" colspan="3" nowrap="nowrap" class="content" ><table width="100%" border="0" cellpadding="0" cellspacing="0" >
+      <tr >
+        <td  height="23" nowrap="nowrap" class="table_navigation_bg1"><span class="table_navigation_title">~formNameCN~查询</span> </td>
+        <td width="75%" height="23" nowrap="nowrap" class="table_navigation_bg2">&nbsp;</td>
+      </tr>
+      
+    </table></td>
+  </tr>
+  <tr>
+    <td colspan="3" class="content">&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="3" class="content">名称：     
+    <input type="text" name="textfield">    </td>
+  </tr>
+  <tr>
+    <td colspan="3" align="right" class="content">
+	  <input name="查询" value="查 询" type="button" class="find"  onClick="find()">
+      <input name="重置" value="重 置" type="reset" class="reset"></td>
+  </tr>
+</table>	
+
+<div class="HackBox" >
+	<iframe name="inner" style="left:0;" src="<%=request.getContextPath()%>/~formName~List.do?action=iframe_luru" marginheight="0" marginwidth="0" frameborder="0"  width="100%" height="100%"></iframe>
+</div>
+</html:form>
+</body>
+</html>

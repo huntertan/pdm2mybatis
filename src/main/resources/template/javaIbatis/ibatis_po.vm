@@ -1,0 +1,35 @@
+package $!{base_package}.$!{pojo_package};
+
+#foreach($import in $tableModel.javaImport)
+import $!import;
+#end
+import java.io.Serializable;
+##$!tableModel.tableNameCN  
+/**
+ *$!tableModel.tableComment
+ */
+public class $!{tableModel.tableName} extends BasePO implements Serializable {
+
+#foreach($fieldName in $tableModel.columnName)
+	private $!{tableModel.javaType.get($foreach.index)} $!stringUtil.uncapitalize($fieldName);
+#end
+#foreach($fieldName in $tableModel.columnName)
+##$!{tableModel.columnNameCN.get($foreach.index)}  	
+	/**
+     * @return #if($!{tableModel.columnComment.get($foreach.index)})$!{tableModel.columnComment.get($foreach.index)}#end
+     
+	 */
+	public $!{tableModel.javaType.get($foreach.index)} get$!stringUtil.capitalize($fieldName)() {
+		return this.$!stringUtil.uncapitalize($fieldName);
+	}
+## $!stringUtil.uncapitalize($fieldName) -	$!{tableModel.columnNameCN.get($foreach.index)} 
+	/**
+     * @param #if($!{tableModel.columnComment.get($foreach.index)})$!{tableModel.columnComment.get($foreach.index)}#end
+
+	 */
+	public void set$!stringUtil.capitalize($fieldName)($!{tableModel.javaType.get($foreach.index)} $!stringUtil.uncapitalize($fieldName)) {
+		this.$!stringUtil.uncapitalize($fieldName) = $!stringUtil.uncapitalize($fieldName);
+	}
+#end
+}
+

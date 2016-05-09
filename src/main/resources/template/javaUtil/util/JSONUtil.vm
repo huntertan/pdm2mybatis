@@ -1,0 +1,48 @@
+package $!{base_package}.util;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
+import net.sf.json.processors.JsonValueProcessor;
+import net.sf.json.util.CycleDetectionStrategy;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+/**
+ * 描述 :
+ * 
+ * <pre>
+ * +--------------------------------------------------------------------
+ * 更改历史
+ * 更改时间		 更改人		目标版本		更改内容
+ * +--------------------------------------------------------------------
+ * 2012-6-28       zhiqi.zhou 		1.00	 	创建
+ * </pre>
+ * 
+ * @author hanqing.tan
+ */
+public class JSONUtil {
+    private static final Log log = LogFactory.getLog(JSONUtil.class);
+
+    public static final JsonConfig jsonConfig = new JsonConfig();
+
+    public static String fromObject(Object o) {
+        return JSONObject.fromObject(o, jsonConfig).toString();
+    }
+
+    public static String fromObject(Object o, JsonConfig jsonConfig) {
+        return JSONObject.fromObject(o, jsonConfig).toString();
+    }
+
+    public static String fromArray(Object o) {
+        return JSONArray.fromObject(o, jsonConfig).toString();
+    }
+
+    public static String fromArray(Object o, JsonConfig jsonConfig) {
+        return JSONArray.fromObject(o, jsonConfig).toString();
+    }
+}

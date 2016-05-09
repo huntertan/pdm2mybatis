@@ -1,0 +1,59 @@
+<%@ page contentType="text/html;charset=GBK"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ page import="com.~package~.~formName~.bean.*" %>
+<%@ page import="com.~package~.~formName~.service.~className~State" %>
+<%
+String window_name="~formNameCN~信息";
+~className~ ~formName~=(~className~)request.getAttribute("~formName~");
+%>
+<html>
+<head>
+<meta http-equiv="Content-Language" content="zh-cn">
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<LINK href="<%=request.getContextPath()%>/styles/styles_view_table.css" rel=stylesheet>
+<title><%=window_name%></title>
+
+</head>
+
+<body leftmargin="0" topmargin="0">
+<html:form action="/~formName~Add" >	
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" >
+  <tr>
+   <td width="22" background="images/edit1_r1_c1.jpg">&nbsp;</td>
+   <td background="images/edit1_r1_c2.jpg">&nbsp;</td>
+   <td width="20" background="images/edit1_r1_c3.jpg">&nbsp;</td>
+  </tr>
+  <tr>
+   <td width="22"  background="images/edit1_r2_c1.jpg">&nbsp;</td>
+   <td align="left" valign="top">  
+   
+   
+   
+<table width="100%" border="0" cellpadding="3" cellspacing="1"  class="table_content">  
+       <TR>
+          <TD  colspan="2"  nowrap class="title_height">
+	  <span class="title"> <%
+	out.print(window_name);
+	%> </span></TD>
+        </TR>
+ ~viewField~
+    <TR align="center"> 
+      <TD colspan="2"> 
+        <input type="button" name="Submit3" value="关闭" onClick="window.close();" class="button">      </TD>
+    </tr>
+</TABLE>
+   
+   </td>
+   <td width="20" background="images/edit1_r2_c3.jpg">&nbsp;</td>
+  </tr>
+  <tr>
+   <td height="19" background="images/edit1_r3_c1.jpg">&nbsp;</td>
+   <td height="19" background="images/edit1_r3_c2.jpg">&nbsp;</td>
+   <td height="19" background="images/edit1_r3_c3.jpg">&nbsp;</td>
+  </tr>
+</table>
+</html:form>
+</body>
+
+</html>

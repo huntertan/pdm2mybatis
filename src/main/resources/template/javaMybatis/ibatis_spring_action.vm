@@ -1,0 +1,71 @@
+package $!{base_package}.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import $!{base_package}.$!{service_package}.$!{tableModel.tableName}Service;
+import $!{base_package}.$!{pojo_package}.$!{tableModel.tableName};
+import $!{base_package}.util.JSONUtil;
+import $!{base_package}.util.PageController;
+
+@Controller
+@RequestMapping("/${admin_path}$!{stringUtil.uncapitalize($!{tableModel.tableName})}")
+public class $!{tableModel.tableName}Controller extends AbstractController {
+	private static final Logger logger = LoggerFactory.getLogger($!{tableModel.tableName}ServiceImpl.class);
+    @Autowired
+    private $!{tableModel.tableName}Service $!{stringUtil.uncapitalize($!{tableModel.tableName})}Service;
+	@RequestMapping("/$!{stringUtil.uncapitalize($!{tableModel.tableName})}List")
+    public String $!{stringUtil.uncapitalize($!{tableModel.tableName})}List(Integer pageNo, $!{tableModel.tableName} $!{stringUtil.uncapitalize($!{tableModel.tableName})}, HttpServletRequest request, HttpServletResponse response,
+        ModelMap model) {
+        ##Map<String, Object> param = new HashMap<String, Object>();
+        ##param.put("$!{stringUtil.uncapitalize($!{tableModel.tableName})}", $!{stringUtil.uncapitalize($!{tableModel.tableName})});
+
+        int totalCount = $!{stringUtil.uncapitalize($!{tableModel.tableName})}Service.getCount($!{stringUtil.uncapitalize($!{tableModel.tableName})});
+        pageNo = pageNo == null ? 1 : pageNo;
+        PageController page = new PageController(totalCount, pageNo);
+        ##param.put("start", page.getPageStartRow());
+        ##param.put("size", page.getPageSize());
+
+        List<$!{tableModel.tableName}> $!{stringUtil.uncapitalize($!{tableModel.tableName})}s = $!{stringUtil.uncapitalize($!{tableModel.tableName})}Service.selectList($!{stringUtil.uncapitalize($!{tableModel.tableName})},null,page.getPageStartRow(),page.getPageSize());
+        model.addAttribute("json", JSONUtil.fromArray($!{stringUtil.uncapitalize($!{tableModel.tableName})}s).toString());
+        model.addAttribute("page", page);
+        model.addAttribute("$!{stringUtil.uncapitalize($!{tableModel.tableName})}", $!{stringUtil.uncapitalize($!{tableModel.tableName})});
+        return "/${admin_path}$!{stringUtil.uncapitalize($!{tableModel.tableName})}/$!{stringUtil.uncapitalize($!{tableModel.tableName})}-list";
+    }
+
+    @RequestMapping("/$!{stringUtil.uncapitalize($!{tableModel.tableName})}Edit")
+    public String $!{stringUtil.uncapitalize($!{tableModel.tableName})}Edit($!{tableModel.tableName} $!{stringUtil.uncapitalize($!{tableModel.tableName})}, HttpServletRequest request, HttpServletResponse response, ModelMap model) {
+        if ($!{stringUtil.uncapitalize($!{tableModel.tableName})}.get$!{stringUtil.capitalize($!{tableModel.formatPK})}() != null) {
+            $!{stringUtil.uncapitalize($!{tableModel.tableName})} = $!{stringUtil.uncapitalize($!{tableModel.tableName})}Service.selectByPrimaryKey($!{stringUtil.uncapitalize($!{tableModel.tableName})}.get$!{stringUtil.capitalize($!{tableModel.formatPK})}());
+            model.addAttribute("$!{stringUtil.uncapitalize($!{tableModel.tableName})}", $!{stringUtil.uncapitalize($!{tableModel.tableName})});
+        }
+        return "/${admin_path}$!{stringUtil.uncapitalize($!{tableModel.tableName})}/$!{stringUtil.uncapitalize($!{tableModel.tableName})}-edit";
+    }
+
+    @RequestMapping("/$!{stringUtil.uncapitalize($!{tableModel.tableName})}Save")
+    public String $!{stringUtil.uncapitalize($!{tableModel.tableName})}Save($!{tableModel.tableName} $!{stringUtil.uncapitalize($!{tableModel.tableName})}, HttpServletRequest request, HttpServletResponse response, ModelMap model) {
+        if ($!{stringUtil.uncapitalize($!{tableModel.tableName})}.get$!{stringUtil.capitalize($!{tableModel.formatPK})}() == null) {
+            $!{stringUtil.uncapitalize($!{tableModel.tableName})}Service.insert($!{stringUtil.uncapitalize($!{tableModel.tableName})});
+        } else {
+            $!{stringUtil.uncapitalize($!{tableModel.tableName})}Service.updateByPrimaryKey($!{stringUtil.uncapitalize($!{tableModel.tableName})});
+        }
+        return "redirect:/${admin_path}$!{stringUtil.uncapitalize($!{tableModel.tableName})}/$!{stringUtil.uncapitalize($!{tableModel.tableName})}List";
+    }
+
+    @RequestMapping("/$!{stringUtil.uncapitalize($!{tableModel.tableName})}Del")
+    public String $!{stringUtil.uncapitalize($!{tableModel.tableName})}Del($!{tableModel.tableName} $!{stringUtil.uncapitalize($!{tableModel.tableName})}, HttpServletRequest request, HttpServletResponse response, ModelMap model) {
+        $!{stringUtil.uncapitalize($!{tableModel.tableName})}Service.deleteByPrimaryKey($!{stringUtil.uncapitalize($!{tableModel.tableName})}.get$!{stringUtil.capitalize($!{tableModel.formatPK})}());
+        return "redirect:/${admin_path}$!{stringUtil.uncapitalize($!{tableModel.tableName})}/$!{stringUtil.uncapitalize($!{tableModel.tableName})}List";
+    }
+}

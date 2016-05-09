@@ -1,0 +1,110 @@
+<%@ page contentType="text/html;charset=GBK"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ page import="com.~package~.~formName~.bean.*" %>
+<%@ page import="com.~package~.~formName~.service.~className~State" %>
+<%
+String window_name="~formNameCN~信息";
+~className~ ~formName~=(~className~)request.getAttribute("~formName~");
+String action=(String)request.getAttribute("action");//next action
+String sourceAction=request.getParameter("action");//before action
+Boolean saveFlag=(Boolean)request.getAttribute("saveFlag");//save flag
+String errMsg=(String)request.getAttribute("errMsg");//error info
+if(saveFlag!=null&&saveFlag.booleanValue()){
+	out.println("<script>alert('保存成功');</script>");
+}else if(saveFlag!=null&&!saveFlag.booleanValue()){
+	if(errMsg==null)
+		out.println("<script>alert('保存失败');</script>");
+	else
+		out.println("<script>alert('保存失败，"+errMsg+"');</script>");
+}
+%>
+<html>
+<head>
+<meta http-equiv="Content-Language" content="zh-cn">
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<link href="styles/styles_element.css" rel="stylesheet" type="text/css">
+<link href="styles/styles_edit_table.css" rel="stylesheet" type="text/css">
+<title>
+<%
+if(sourceAction!=null&&sourceAction.equals("addView")){
+	out.print("添加"+window_name);
+}else{
+	out.print("修改"+window_name);
+}
+%>
+</title>
+<script language="JavaScript" type="text/JavaScript">
+<%if(sourceAction!=null&&(sourceAction.equals("addSave")||sourceAction.equals("updateSave"))&&saveFlag!=null&&saveFlag.booleanValue()){%>
+	if(window.opener!=undefined){
+		window.opener.location.href='<%=request.getContextPath()%>/jsp/~formName~/~formName~List_iframe_luru.jsp';
+		window.close();
+	}
+<%}%>
+function validate(){
+	var doc = document.forms[0];
+	<%
+	if(action.equals("addSave")){
+	%>
+		doc.action="<%=request.getContextPath()%>/~formName~Add.do?action=addSave";
+	<%}else{%>
+		doc.action="<%=request.getContextPath()%>/~formName~Update.do?action=updateSave";
+	<%}	%>
+	//doc.nr.value = getEditorContent();
+	<%=com.util.Validator.getInstance().loadJS("~formName~").toString()%>
+	if(confirm("您确认此操作吗？")){
+		doc.submit();
+	}
+}
+</script>
+</head>
+
+<body leftmargin="0" topmargin="0">
+<html:form action="/~formName~Add"  onsubmit="return validate();">	
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" >
+  <tr>
+   <td width="22" background="images/edit1_r1_c1.jpg">&nbsp;</td>
+   <td background="images/edit1_r1_c2.jpg">&nbsp;</td>
+   <td width="20" background="images/edit1_r1_c3.jpg">&nbsp;</td>
+  </tr>
+  <tr>
+   <td width="22"  background="images/edit1_r2_c1.jpg">&nbsp;</td>
+   <td align="left" valign="top">  
+   
+   
+   
+<table width="100%" border="0" cellpadding="3" cellspacing="1"  class="table_content">  
+       <TR>
+          <TD  colspan="2"  nowrap class="title_height">
+	  <span class="title">
+          <%
+if(sourceAction!=null&&sourceAction.equals("addView")){
+	out.print("添加"+window_name);
+}else{
+	out.print("修改"+window_name);
+}
+%>
+          </span></TD>
+        </TR>
+    ~editField~
+    <TR align="center"> 
+      <TD colspan="2"> 
+        <input type="button" name="Submit2" value="保存"  onClick="validate();" class="button"> 
+        <input type="reset" name="Submit" value="重置" class="button">
+        <input type="button" name="Submit3" value="关闭" onClick="window.close();" class="button">      </TD>
+    </tr>
+</TABLE>
+   
+   </td>
+   <td width="20" background="images/edit1_r2_c3.jpg">&nbsp;</td>
+  </tr>
+  <tr>
+   <td height="19" background="images/edit1_r3_c1.jpg">&nbsp;</td>
+   <td height="19" background="images/edit1_r3_c2.jpg">&nbsp;</td>
+   <td height="19" background="images/edit1_r3_c3.jpg">&nbsp;</td>
+  </tr>
+</table>
+</html:form>
+</body>
+
+</html>

@@ -1,0 +1,79 @@
+package $!{base_package}.util;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import net.sf.json.JsonConfig;
+import net.sf.json.processors.JsonValueProcessor;
+import net.sf.json.util.CycleDetectionStrategy;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+/**
+ * 描述 :
+ * 
+ * <pre>
+ * +--------------------------------------------------------------------
+ * 更改历史
+ * 更改时间		 更改人		目标版本		更改内容
+ * +--------------------------------------------------------------------
+ * 2012-6-19       zhiqi.zhou 		1.00	 	创建
+ * </pre>
+ * 
+ * @author zhiqi.zhou
+ */
+public class JsonConfig extends JsonConfig {
+    private static final Log log = LogFactory.getLog(JsonConfig.class);
+    public static final SimpleDateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    public JsonConfig() {
+        super();
+        this.setExcludes(new String[] { "handler", "hibernateLazyInitializer" });
+        this.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+        this.registerJsonValueProcessor(Timestamp.class, new JsonValueProcessor() {
+            public Object processArrayValue(Object paramObject, JsonConfig paramJsonConfig) {
+                return FORMAT.format(paramObject);
+            }
+
+            public Object processObjectValue(String paramString, Object paramObject, JsonConfig paramJsonConfig) {
+                if (paramObject != null) {
+                    return FORMAT.format(paramObject);
+                } else {
+                    return "";
+                }
+            }
+        });
+        this.registerJsonValueProcessor(Date.class, new JsonValueProcessor() {
+            public Object processArrayValue(Object paramObject, JsonConfig paramJsonConfig) {
+                return FORMAT.format(paramObject);
+            }
+
+            public Object processObjectValue(String paramString, Object paramObject, JsonConfig paramJsonConfig) {
+                if (paramObject != null) {
+                    return FORMAT.format(paramObject);
+                } else {
+                    return "";
+                }
+            }
+        });
+
+        this.registerJsonValueProcessor(Integer.class, new JsonValueProcessor() {
+
+            public Object processArrayValue(Object paramObject, JsonConfig paramJsonConfig) {
+                return paramObject;
+            }
+
+            public Object processObjectValue(String paramString, Object paramObject, JsonConfig paramJsonConfig) {
+                if (paramObject != null) {
+                    return paramObject;
+                } else {
+                    return "";
+                }
+            }
+        });
+
+    }
+
+}

@@ -1,0 +1,21 @@
+package $!{base_package};
+
+#foreach($tableModel in $tableModels)
+import $!{base_package}.${tableModel.tableName}DAO;
+#end
+
+public class FacadeGame {
+#foreach($tableModel in $tableModels)
+	private ${tableModel.tableName}DAO $!{stringUtil.uncapitalize($tableModel.tableName)}DAOImpl;
+#end
+#foreach($tableModel in $tableModels)
+	
+	public ${tableModel.tableName}DAO get${tableModel.tableName}DAOImpl() {
+		return $!{stringUtil.uncapitalize($tableModel.tableName)}DAO;
+	}
+	
+	public void set${tableModel.tableName}Impl(${tableModel.tableName} $!{stringUtil.uncapitalize($tableModel.tableName)}Impl) {
+        this.$!{stringUtil.uncapitalize($tableModel.tableName)}Impl = $!{stringUtil.uncapitalize($tableModel.tableName)}Impl;
+    }
+#end
+}

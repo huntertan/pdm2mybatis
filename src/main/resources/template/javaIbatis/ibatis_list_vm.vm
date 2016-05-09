@@ -1,0 +1,174 @@
+#set($preFix="$!")<!Doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>$!{projct_name_zh}后台</title>
+\#include("/admin/inc/cssjs.vm")
+##自行修改成相应的css 和 js
+<link href="/admin/css/grid.css" rel="stylesheet" type="text/css" />
+<link href="/newgame/css/index.css" rel="stylesheet" type="text/css" />
+<link href="/newgame/css/calender.css" rel="stylesheet" type="text/css" />
+<link href="/newgame/js/calendar/ntes_cal.css" type="text/css"	rel="stylesheet"  />
+<script src="/newgame/js/calendar/ntes_cal.js" type="text/javascript"></script>  
+<script language=javascript src="/newgame/admin/js/grid_no_blank.js"></script>
+<script language="javascript" src="/newgame/js/date/WdatePicker.js"></script>
+\#if($preFix!listJSON)
+<script>
+    gridobj.gridJson = $preFix!{listJSON};
+    gridobj.sumNum  = $preFix!{page.totalCount};
+   	gridobj.curPage = $preFix!{page.currentPage};
+    gridobj.pageNum = $preFix!{page.pageSize};
+  	gridobj.columns=[
+#foreach($fieldName in $tableModel.columnName)
+	{ "name":"$!{tableModel.columnNameCN.get($foreach.index)}",        "width":"20%", "sortable":"false", "field":"$!{stringUtil.uncapitalize($fieldName)}"},
+#end
+	{ "name":"操作",        "width":"20%",  "sortable":"false", "function":operat}
+    ];
+	gridobj.showCol=new Array(#foreach($fieldName in $tableModel.columnName)$foreach.index,#end${tableModel.columnName.size()});
+	gridobj.chkField='$!{tableModel.pk}';
+    gridobj.chkName="key";
+	gridobj.isSelectCol=0;
+	gridobj.formName = "sform";
+	gridobj.chkName="mark";
+ 	function operat(n){
+	   var data_id = gridobj.gridJson[n]["$!{tableModel.pk}"];
+	   return '<a href="/admin/$!{stringUtil.uncapitalize($!{tableModel.tableName})}Edit.action?$!{stringUtil.uncapitalize($!{tableModel.tableName})}.$!{tableModel.pk}='+data_id+'" >[编辑]</a>';
+	}
+	function setstatus(n){
+	   var result = gridobj.gridJson[n]["status"];	
+	   if(result == '1'){
+	     return "未发布";
+	   }
+	   else if(result == '2'){
+	     return "已发布";
+	   }
+	   else if(result == '0'){
+	     return "删除";
+	   }       
+	}
+   //按首字母搜索
+	function setFirstChar(char){
+		jQuery("#firstChar").attr("value",char);
+		search();
+	}
+  //搜索
+	function search(){
+		jQuery("\#sform").attr("action","/admin/$!{stringUtil.uncapitalize($!{tableModel.tableName})}List.action");
+		jQuery("\#sform").submit();
+	}
+	//放入回收站、发布、暂不发布、选择模板等操作
+	function todoAction(){
+		//判断用户选择了什么操作
+		var opera =  jQuery(":input:checked[name='operate']").attr("value");
+		if(!opera){
+			alert("先选择你要进行的操作！");
+			return ;
+		}
+		if(jQuery(":input:checked[name='mark']").size()==0){
+			alert("你还没有选择卡类型,请至少要选择一个！");
+			return ;
+		}
+		var actionName = "";
+		switch(opera){
+			case 'recycle':
+				if(confirm("放入回收站？")){
+					actionName = "/admin/$!{stringUtil.uncapitalize($!{tableModel.tableName})}Opeate.action";
+					document.sform.action = actionName;
+					document.sform.submit();
+					break;
+				}else{
+					return ;
+				}
+			case 'publish':
+				if(confirm("确定发布吗？")){
+					var ids = 'status=2';
+					jQuery(":input:checked[name='mark']").each(function(){
+						ids += '&id='+jQuery(this).val();
+					});
+					jQuery.ajax({
+                		url:"/cardsystem/$!{stringUtil.uncapitalize($!{tableModel.tableName})}Opeate.action",
+                		type:"post",
+                		data:ids,
+                		cache:false,
+                		dataType:"html",
+                		success:function(data){
+							if(data=='true'){
+                				alert('发布成功!');
+								window.location.href=window.location.href;
+							}else{
+								alert('发布失败!');
+							}
+							
+                		},
+                		error:function(){
+							alert('系统异常!');
+                		}
+                	});
+				}else{
+					return ;
+				}
+				break;
+			case 'noPublish':
+				if(confirm("确定取消发布吗？")){
+					var ids = 'status=1';
+					jQuery(":input:checked[name='mark']").each(function(){
+						ids += '&id='+jQuery(this).val();
+					});
+					jQuery.ajax({
+                		url:"/admin/$!{stringUtil.uncapitalize($!{tableModel.tableName})}Opeate.action",
+                		type:"post",
+                		data:ids,
+                		cache:false,
+                		dataType:"html",
+                		success:function(data){
+                			alert('取消发布成功!');
+							window.location.href=window.location.href;
+                		},
+                		error:function(){
+							alert('系统异常!');
+                		}
+                	});
+				}else{
+					return ;
+				}
+				break;
+		    case 'selectModel':
+					actionName = "/admin/$!{stringUtil.uncapitalize($!{tableModel.tableName})}Opeate.action";
+					document.sform.action = actionName;
+					selectModel();
+					break;
+			default:
+				return ;
+		}
+	} 
+</script>
+\#end
+
+<style type="text/css">
+<!--
+td {font-size:12px}
+-->
+</style>
+</head>
+<body>
+	
+		<div class="nav_bar" style="clear:both; margin:0px;">
+			<div style="float:left">当前位置: $!{projct_name_zh} &gt; $tableModel.tableNameCN </div>
+			<div style="float:right">
+				<input type="button" onclick="location.href='/admin/$!{stringUtil.uncapitalize($!{tableModel.tableName})}Edit.action';" value="添加$tableModel.tableNameCN">&nbsp; 
+		</div>
+		</div>
+
+\#if($preFix!listJSON)
+<form id="sform" name="sform" action="/admin/$!stringUtil.uncapitalize($!{tableModel.tableName})List.action" method="get" style="margin:0;padding:0">
+    <div class="area panelB">
+        <div id="sformError"  style="background:#C26666 none repeat scroll 0 0"></div>
+            <div class="sResult">
+            	<div id="thgrid_div"><script>gridobj.showTable();</script></div>
+            </div>
+    </div>
+</form>
+\#end
+\#include("/newgame/admin/inc/footer.vm")
+</body>
+</html>
