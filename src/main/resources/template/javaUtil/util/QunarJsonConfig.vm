@@ -20,6 +20,7 @@ import org.apache.commons.logging.LogFactory;
  * 更改时间		 更改人		目标版本		更改内容
  * +--------------------------------------------------------------------
  * 2012-6-19       zhiqi.zhou 		1.00	 	创建
+ * 2015-1-12       hanqing.tan      1.01        修改
  * </pre>
  * 
  * @author zhiqi.zhou
