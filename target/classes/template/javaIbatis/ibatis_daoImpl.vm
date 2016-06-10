@@ -1,0 +1,66 @@
+package $!{base_package}.dao.ibatis;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Repository;
+
+import $!{base_package}.dao.BaseDao;
+import $!{base_package}.dao.$!{tableModel.tableName}DAO;
+import $!{base_package}.$!{pojo_package}.$!{tableModel.tableName};
+import $!{base_package}.util.PageController;
+
+@Repository
+@Lazy
+public class $!{tableModel.tableName}DAOImpl extends BaseDao implements $!{tableModel.tableName}DAO {
+    public $!{tableModel.tableName}DAOImpl() {
+        this.setNamespace("$!{tableModel.tableName}");
+    }
+
+    @Override
+    public $!{tableModel.tableName} getById(Integer id) {
+        return ($!{tableModel.tableName}) this.queryForObject("getById", id);
+    }
+
+    @Override
+    public List<$!{tableModel.tableName}> getList($!{tableModel.tableName} $!stringUtil.uncapitalize($!{tableModel.tableName}), PageController page) {
+		$!{stringUtil.uncapitalize($!{tableModel.tableName})}.setStart(page.getPageStartRow());
+        $!{stringUtil.uncapitalize($!{tableModel.tableName})}.setSize(page.getPageSize());
+        return this.queryForList("getList", $!stringUtil.uncapitalize($!{tableModel.tableName}));
+    }
+
+    @Override
+    public Integer getCount($!{tableModel.tableName} $!stringUtil.uncapitalize($!{tableModel.tableName})) {
+        return (Integer) this.queryForObject("getCount", $!stringUtil.uncapitalize($!{tableModel.tableName}));
+    }
+
+    @Override
+    public void insert($!{tableModel.tableName} $!stringUtil.uncapitalize($!{tableModel.tableName})) {
+        $!{stringUtil.uncapitalize($!{tableModel.tableName})}.setUpdateDate(new Date());
+        super.insert("insert", $!stringUtil.uncapitalize($!{tableModel.tableName}));
+    }
+
+    @Override
+    public void update($!{tableModel.tableName} $!stringUtil.uncapitalize($!{tableModel.tableName})) {
+        $!{stringUtil.uncapitalize($!{tableModel.tableName})}.setUpdateDate(new Date());
+        super.update("update", $!stringUtil.uncapitalize($!{tableModel.tableName}));
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        super.delete("deleteById", id);
+
+    }
+	
+	@Override
+    public void saveOrUpdate($!{tableModel.tableName} $!stringUtil.uncapitalize($!{tableModel.tableName})) {
+        if ($!{stringUtil.uncapitalize($!{tableModel.tableName})}.get$!{stringUtil.capitalize($!{tableModel.pk})}()!=null) {
+            this.update($!stringUtil.uncapitalize($!{tableModel.tableName}));
+        }else{
+            this.insert($!stringUtil.uncapitalize($!{tableModel.tableName}));
+        }
+    }
+}

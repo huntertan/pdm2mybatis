@@ -1,0 +1,66 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<title>${tableModel.tableNameCN}--$!{projct_name_zh} </title>
+		<jsp:include page="../header.jsp" />
+</head>
+#set($preFix="$!")
+<body>
+	<div class="base">
+		<div class="base_body">
+				<div id="jobs_app_manage">
+					<div class="c_top">
+						<div class="nav_bar" style="clear:both; margin:0px;">
+							<div style="float:left">当前位置: $!{projct_name_zh} &gt; ${tableModel.tableNameCN} &gt; 添加/编辑</div>
+						 </div>
+						<form id="sform" name="sform" action="${baseUrl}/${admin_path}$!{stringUtil.uncapitalize($!{tableModel.tableName})}/$!{stringUtil.uncapitalize($!{tableModel.tableName})}Save" method="post" style="margin:0;padding:0">
+							<input name="${tableModel.pk}" type="hidden" value="${$!{stringUtil.uncapitalize($!{tableModel.tableName})}.${tableModel.pk}}"/>
+#foreach($fieldName in $tableModel.columnName)
+	#if(${tableModel.pk}!=$fieldName)
+        #set($validate="")
+        #set($required="")
+        #set($maxSize=$!{tableModel.columnSize.get($foreach.index)})
+        #if(!$tableModel.columnList.get($foreach.index).isNullAble())
+        	#set($required=" required ")
+        #end	
+        #if($!{tableModel.columnSize.get($foreach.index)}==0)
+        	#set($maxSize="11")
+        #end
+        #if($!{tableModel.javaType.get($foreach.index).endsWith('String')})
+			
+        #elseif($tableModel.javaType.get($foreach.index).endsWith('Integer')||$tableModel.javaType.get($foreach.index).endsWith('Long')||$tableModel.javaType.get($foreach.index).endsWith('Short'))
+			#set($digits=' digits="true" ')
+        #elseif($tableModel.javaType.get($foreach.index).endsWith('Double')||$tableModel.javaType.get($foreach.index).endsWith('Float')||$tableModel.javaType.get($foreach.index).endsWith('BigDecimal'))
+			#set($digits=' number="true" ')
+		#end
+
+                    		<div class="form-group">
+                    			<label for="${fieldName}" class="col-sm-2 control-label">$!{tableModel.columnNameCN.get($foreach.index)}</label>
+                                <div class="col-sm-10">
+                        			<input type="text" class="form-control"  placeholder="$!{tableModel.columnNameCN.get($foreach.index)}" name="${fieldName}" id="${fieldName}" value="$preFix{$!{stringUtil.uncapitalize($!{tableModel.tableName})}.${fieldName}}" $required $digits maxlength="$maxSize">
+                                </div>
+                             </div>						
+	#end
+#end
+		          		</form>
+		          		<div class="confirmBar" style="margin-left: 10px">
+							<button type="button" class="btn btn-primary" onclick="jQuery('#sform').submit();">提交</button>
+							<button type="button" class="btn btn-primary" onclick="history.go(-1);">取消</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div style="clear:both"></div>
+	</div>
+	<script type="text/javascript">$("#sform").validationEngine();</script>
+	<jsp:include page="../footer.jsp" />
+   
+   <script src="/js/jquery.validate.js"></script>
+   <script src="/js/languages/messages_zh.js"></script>
+   <script>$("#sform").validate();</script>
+</body>
+</html>

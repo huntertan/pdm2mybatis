@@ -1,0 +1,42 @@
+package $!{base_package}.service;
+
+import java.util.List;
+import java.util.Map;
+
+import $!{base_package}.$!{pojo_package}.$!{tableModel.tableName};
+ 
+public interface $!{tableModel.tableName}Service {
+#if(${tableModel.pkJavaType}!='')
+    int deleteByPrimaryKey(${tableModel.pkJavaType} ${tableModel.formatPK});
+#end
+    $!{tableModel.pkJavaType} insert($!{tableModel.tableName} record);
+
+    $!{tableModel.pkJavaType} insertSelective($!{tableModel.tableName} record);
+#if(${tableModel.pkJavaType}!='')
+    $!{tableModel.tableName} selectByPrimaryKey(${tableModel.pkJavaType} ${tableModel.formatPK});
+#end
+#if(${tableModel.pkJavaType}!='')
+    int updateByPrimaryKeySelective($!{tableModel.tableName} record);
+#end
+#if(${tableModel.pkJavaType}!='')
+    int updateByPrimaryKey($!{tableModel.tableName} record);
+#end
+
+    List<$!{tableModel.tableName}> findAll();
+
+    /**
+     * @param map
+     * @return
+     */
+    int getCount($!{tableModel.tableName} $!{stringUtil.uncapitalize($!{tableModel.tableName})});
+	
+    /**
+     * @param $!{stringUtil.uncapitalize($!{tableModel.tableName})}
+	 * @param orderBy 排序
+     * @param start 开始行
+     * @param size 取多少条
+     * @return
+     */
+    List<$!{tableModel.tableName}> selectList($!{tableModel.tableName} $!{stringUtil.uncapitalize($!{tableModel.tableName})},String orderBy,Integer start, Integer size);
+
+}

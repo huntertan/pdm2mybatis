@@ -1,0 +1,47 @@
+package $!{base_package}.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import $!{base_package}.$!{pojo_package}.$!{tableModel.tableName};
+import $!{base_package}.util.PageController;
+
+public interface $!{tableModel.tableName}DAO {
+	/**
+	 * 按ID获取
+	 * @param id
+	 * @return
+	 */
+	${tableModel.tableName} getById(${tableModel.pkJavaType} id);
+	/**
+	 * @param params
+	 * @return
+	 */
+	List<${tableModel.tableName}> getList(${tableModel.tableName} $!{stringUtil.uncapitalize($!{tableModel.tableName})},PageController page);
+
+	/**
+	 * @param params
+	 * @return
+	 */
+	Integer getCount(${tableModel.tableName} $!stringUtil.uncapitalize($!{tableModel.tableName}));
+
+	/**
+	 * @param $!stringUtil.uncapitalize($!{tableModel.tableName}) ${tableModel.tableNameCN}
+	 */
+	void insert(${tableModel.tableName} $!stringUtil.uncapitalize($!{tableModel.tableName}));
+
+	/**
+	 * @param $!stringUtil.uncapitalize($!{tableModel.tableName})
+	 */
+	void update(${tableModel.tableName} $!stringUtil.uncapitalize($!{tableModel.tableName}));
+
+	/**
+	 * @param id
+	 */
+	void deleteById(${tableModel.pkJavaType} id);
+	
+	/**
+     * @param $!stringUtil.uncapitalize($!{tableModel.tableName}) 如果主键不为空则更新,为空则新增
+     */
+    void saveOrUpdate($!{tableModel.tableName} $!stringUtil.uncapitalize($!{tableModel.tableName}));
+}

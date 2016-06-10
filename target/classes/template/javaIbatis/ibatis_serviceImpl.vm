@@ -1,0 +1,58 @@
+package $!{base_package}.$!{service_package}.impl;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
+
+import $!{base_package}.dao.$!{tableModel.tableName}DAO;
+import $!{base_package}.$!{pojo_package}.$!{tableModel.tableName};
+import $!{base_package}.$!{service_package}.$!{tableModel.tableName}Service;
+
+@Service
+@Lazy
+public class $!{tableModel.tableName}ServiceImpl implements $!{tableModel.tableName}Service {
+
+    private static final Log log = LogFactory.getLog($!{tableModel.tableName}ServiceImpl.class);
+	@Resource
+	private $!{tableModel.tableName}DAO $!stringUtil.uncapitalize($!{tableModel.tableName})DAO;
+	@Override
+	public List<$!{tableModel.tableName}> getAll() {
+		$!{tableModel.tableName} $!stringUtil.uncapitalize($!{tableModel.tableName}) = new $!{tableModel.tableName};
+		$!{stringUtil.uncapitalize($!{tableModel.tableName})}.setStart(0);
+		$!{stringUtil.uncapitalize($!{tableModel.tableName})}.setSize(Integer.MAX_VALUE);
+		return $!stringUtil.uncapitalize($!{tableModel.tableName})Dao.getList(params);
+	}
+	@Override
+	public List<$!{tableModel.tableName}> getList(${tableModel.tableName} $!stringUtil.uncapitalize($!{tableModel.tableName})) {
+		return $!stringUtil.uncapitalize($!{tableModel.tableName})Dao.getList(params);
+	}
+	@Override
+	public $!{tableModel.tableName} getById(${tableModel.pkJavaType} id) {
+		return $!stringUtil.uncapitalize($!{tableModel.tableName})Dao.getById(id);
+	}
+	@Override
+	public void update($!{tableModel.tableName} $!stringUtil.uncapitalize($!{tableModel.tableName})) {
+		$!stringUtil.uncapitalize($!{tableModel.tableName})Dao.update($!stringUtil.uncapitalize($!{tableModel.tableName}));
+	}
+	
+	@Override
+	public void insert($!{tableModel.tableName} $!stringUtil.uncapitalize($!{tableModel.tableName})) {
+		$!stringUtil.uncapitalize($!{tableModel.tableName})Dao.insert($!stringUtil.uncapitalize($!{tableModel.tableName}));
+	}
+	@Override
+	public void deleteById(${tableModel.pkJavaType} id) {
+		$!stringUtil.uncapitalize($!{tableModel.tableName})Dao.deleteById(id);
+	}
+	@Override
+	public int getCount(${tableModel.tableName} $!stringUtil.uncapitalize($!{tableModel.tableName})) {
+		return $!stringUtil.uncapitalize($!{tableModel.tableName})Dao.getCount(params);
+	}
+}

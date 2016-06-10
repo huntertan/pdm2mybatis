@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="$!{base_package}.${dao_package}.$!{tableModel.tableName}Mapper">
+#**	<resultMap id="BaseResultMap" type="$!{base_package}.po.$!{tableModel.tableName}">
+		<id column="$!{tableModel.formatPK}" property="$!{tableModel.formatPK}" jdbcType="#if($tableModel.pkType=='int')INTEGER#{else}${tableModel.pkType.toUpperCase()}#end" />
+#foreach($fieldName in $tableModel.columnName)
+#if($!{stringUtil.uncapitalize($fieldName)}!=$!{tableModel.formatPK})
+		<result column="$!stringUtil.uncapitalize($fieldName)" property="$!stringUtil.uncapitalize($fieldName)" jdbcType="#if($tableModel.columnType.get($foreach.index)=='int')INTEGER#elseif($tableModel.columnType.get($foreach.index)=='text')VARCHAR#elseif($tableModel.columnType.get($foreach.index)=='longtext')LONGVARCHAR#elseif($tableModel.columnType.get($foreach.index)=='datetime')TIMESTAMP#{else}${tableModel.columnType.get($foreach.index).toUpperCase()}#end" />
+#end
+#end
+	</resultMap>
+**#
+#if($tableModel.pkType=='int'||$tableModel.pkType=='serial')#set($pkJdbcType="INTEGER")#elseif($tableModel.pkType=='bigserial')#set($pkJdbcType="BIGINT")#else #set($pkJdbcType=${tableModel.pkType.toUpperCase()})#end
+	<sql id="Base_Column_List">
+		#foreach($fieldName in $tableModel.columnName)$!{tableModel.tableNameOriginal}.${tableModel.columnNameOriginal.get($foreach.index)} as $!stringUtil.uncapitalize($fieldName)#if($foreach.count!=$tableModel.columnName.size()),#end#end
+	
+	</sql>
+	<sql id="queryExpression">
+#foreach($fieldName in $tableModel.columnName)
+#if($!{tableModel.javaType.get($foreach.index).endsWith('Date')}||$!{tableModel.javaType.get($foreach.index).endsWith('Timestamp')}||$!{tableModel.javaType.get($foreach.index).endsWith('Time')})
+		<if test="$!{stringUtil.uncapitalize($!{tableModel.tableName})}.$!{stringUtil.uncapitalize($fieldName)}Starttime != null">
+			<![CDATA[
+			AND $!{stringUtil.uncapitalize($!{tableModel.tableNameOriginal})}.${tableModel.columnNameOriginal.get($foreach.index)}>=#{$!{stringUtil.uncapitalize($!{tableModel.tableName})}.$!{stringUtil.uncapitalize($fieldName)}Starttime}##DATE_ADD(#{$!{stringUtil.uncapitalize($!{tableModel.tableName})}.$!{stringUtil.uncapitalize($fieldName)}Starttime}, INTERVAL 1 DAY)
+			
+			]]>
+		</if>
+		<if test="$!{stringUtil.uncapitalize($!{tableModel.tableName})}.$!{stringUtil.uncapitalize($fieldName)}Endtime != null">
+			<![CDATA[
+			AND $!{stringUtil.uncapitalize($!{tableModel.tableNameOriginal})}.${tableModel.columnNameOriginal.get($foreach.index)}<=#{$!{stringUtil.uncapitalize($!{tableModel.tableName})}.$!{stringUtil.uncapitalize($fieldName)}Endtime}##DATE_ADD(#{$!{stringUtil.uncapitalize($!{tableModel.tableName})}.$!{stringUtil.uncapitalize($fieldName)}Endtime}, INTERVAL 1 DAY)
+			
+			]]>
+		</if>
+#else
+		<if test="$!{stringUtil.uncapitalize($!{tableModel.tableName})}.$!{stringUtil.uncapitalize($fieldName)} != null">
+			AND $!{stringUtil.uncapitalize($!{tableModel.tableNameOriginal})}.${tableModel.columnNameOriginal.get($foreach.index)} = #{$!{stringUtil.uncapitalize($!{tableModel.tableName})}.$!{stringUtil.uncapitalize($fieldName)}}
+		</if>
+#end
+#end
+	</sql>
+	<select id="selectByPrimaryKey" resultType="$!{base_package}.$!{pojo_package}.$!{tableModel.tableName}" parameterType="$!{tableModel.pkJavaType}">
+		select
+		<include refid="Base_Column_List" />
+		<![CDATA[
+		from  $!{tableModel.tableNameOriginal}
+		where $!{tableModel.pk} = #{$!{tableModel.formatPK}}##if($pkJdbcType),jdbcType=$pkJdbcType#end
+		 ]]>
+	</select>
+	<select id="findAll" resultType="$!{base_package}.$!{pojo_package}.$!{tableModel.tableName}" >
+		select
+		<include refid="Base_Column_List" />
+		from  $!{tableModel.tableNameOriginal}
+	</select>
+	<select id="selectList" resultType="$!{base_package}.$!{pojo_package}.$!{tableModel.tableName}" parameterType="java.util.HashMap">
+		select
+		<include refid="Base_Column_List" />
+		from  $!{tableModel.tableNameOriginal}
+		where 1=1
+		<include refid="queryExpression" />
+		<if test="orderBy!= null">
+			order by ${orderBy}
+		</if>
+		<if test="start!=null">
+			limit #{size} OFFSET #{start}; ##limit #{start},#{size};
+		</if>
+	</select>
+	<select id="getCount" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+		<![CDATA[
+		select count(1)
+		from  $!{tableModel.tableNameOriginal}
+		where 1=1
+		 ]]>
+		<include refid="queryExpression" />
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="$!{tableModel.pkJavaType}">
+		<![CDATA[
+		delete from  $!{tableModel.tableNameOriginal}
+		where $!{tableModel.pk} = #{$!{tableModel.formatPK}} ##if($pkJdbcType),jdbcType=$pkJdbcType#end
+		]]>
+	</delete>
+	<insert id="insert" parameterType="$!{base_package}.$!{pojo_package}.$!{tableModel.tableName}">
+		<selectKey resultType="$!{tableModel.pkJavaType}" keyProperty="$!{tableModel.formatPK}" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into  $!{tableModel.tableNameOriginal} (#foreach($fieldName in $tableModel.columnName)#if($!{stringUtil.uncapitalize($fieldName)}!=$!{tableModel.formatPK})${tableModel.columnNameOriginal.get($foreach.index)} #if($foreach.count!=$tableModel.columnName.size()),#end#end#end)
+		values (#foreach($fieldName in $tableModel.columnName)#if($!{stringUtil.uncapitalize($fieldName)}!=$!{tableModel.formatPK})#{$!{stringUtil.uncapitalize($fieldName)}} #if($foreach.count!=$tableModel.columnName.size()),#end#end#end)
+	</insert>
+	<insert id="insertSelective" parameterType="$!{base_package}.$!{pojo_package}.$!{tableModel.tableName}">
+		<selectKey resultType="$!{tableModel.pkJavaType}" keyProperty="$!{tableModel.formatPK}" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into  $!{tableModel.tableNameOriginal}
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+#foreach($fieldName in $tableModel.columnName)
+#if($!{stringUtil.uncapitalize($fieldName)}!=$!{tableModel.formatPK})
+		<if test="$!{stringUtil.uncapitalize($fieldName)} != null">
+			${tableModel.columnNameOriginal.get($foreach.index)},
+		</if>
+#end
+#end
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+#foreach($fieldName in $tableModel.columnName)
+#if($!{stringUtil.uncapitalize($fieldName)}!=$!{tableModel.formatPK})
+		<if test="$!{stringUtil.uncapitalize($fieldName)} != null">
+			#{$!{stringUtil.uncapitalize($fieldName)}},
+		</if>
+#end
+#end
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="$!{base_package}.$!{pojo_package}.$!{tableModel.tableName}">
+		update  $!{tableModel.tableNameOriginal}
+		<set>
+#foreach($fieldName in $tableModel.columnName)
+#if($!{stringUtil.uncapitalize($fieldName)}!=$!{tableModel.formatPK})
+		<if test="$!{stringUtil.uncapitalize($fieldName)} != null">
+			${tableModel.columnNameOriginal.get($foreach.index)} = #{$!{stringUtil.uncapitalize($fieldName)}},
+		</if>
+#end
+#end
+		</set>
+		where $!{tableModel.pk} = #{$!{tableModel.formatPK}}##if($pkJdbcType),jdbcType=$pkJdbcType#end
+	</update>
+	<update id="updateByPrimaryKey" parameterType="$!{base_package}.$!{pojo_package}.$!{tableModel.tableName}">
+		<![CDATA[
+		update  $!{tableModel.tableNameOriginal}
+		set 
+#foreach($fieldName in $tableModel.columnName)
+#if($!{stringUtil.uncapitalize($fieldName)}!=$!{tableModel.formatPK})
+		${tableModel.columnNameOriginal.get($foreach.index)} = #{$!{stringUtil.uncapitalize($fieldName)}}#if($foreach.count!=$tableModel.columnName.size()),#end
+
+#end
+#end
+		where $!{tableModel.pk} = #{$!{tableModel.formatPK}}##if($pkJdbcType),jdbcType=$pkJdbcType#end
+		]]>
+	</update>
+</mapper>

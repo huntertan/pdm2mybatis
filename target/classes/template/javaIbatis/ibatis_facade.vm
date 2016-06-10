@@ -1,0 +1,16 @@
+package $!{base_package};
+
+#foreach($tableModel in $tableModels)
+	import $!{base_package}.${tableModel}DAO;
+#end
+
+public class FacadeGame {
+#foreach($tableModel in $tableModels)
+	private ${tableModel}DAO $!{stringUtil.uncapitalize($tableModel.tableName)}DAO;
+#end
+#foreach($tableModel in $tableModels)
+ public ${tableModel}DAO get${tableModel}DAO() {
+    return $!{stringUtil.uncapitalize($tableModel.tableName)}DAO;
+  }
+#end
+}

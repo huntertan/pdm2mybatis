@@ -1,0 +1,89 @@
+package $!{base_package}.$!{pojo_package};
+
+#foreach($import in $tableModel.javaImport)
+import $!import;
+#end
+import java.io.Serializable;
+##$!tableModel.tableNameCN  
+/**
+ *$!tableModel.tableComment
+ */
+public class $!{tableModel.tableName} implements Serializable {
+	private static final long serialVersionUID = 1L;
+#foreach($fieldName in $tableModel.columnName)
+	/**
+     * $!{tableModel.columnNameCN.get($foreach.index)} #if($!{tableModel.columnComment.get($foreach.index)}&&$!{tableModel.columnNameCN.get($foreach.index)}!=$!{tableModel.columnComment.get($foreach.index)})$!{tableModel.columnComment.get($foreach.index)}#end
+	 
+	 */
+#if($!{tableModel.javaType.get($foreach.index).endsWith('Date')}||$!{tableModel.javaType.get($foreach.index).endsWith('Timestamp')}||$!{tableModel.javaType.get($foreach.index).endsWith('Time')})
+	private $!{tableModel.javaType.get($foreach.index)} $!stringUtil.uncapitalize($fieldName);
+	private transient $!{tableModel.javaType.get($foreach.index)} $!stringUtil.uncapitalize($fieldName)Starttime;
+	private transient $!{tableModel.javaType.get($foreach.index)} $!stringUtil.uncapitalize($fieldName)Endtime;
+#else
+	private $!{tableModel.javaType.get($foreach.index)} $!stringUtil.uncapitalize($fieldName);
+#end
+#end
+#foreach($fieldName in $tableModel.columnName)
+	
+#if($!{tableModel.javaType.get($foreach.index).endsWith('Date')}||$!{tableModel.javaType.get($foreach.index).endsWith('Timestamp')}||$!{tableModel.javaType.get($foreach.index).endsWith('Time')})
+	/**
+     * @return $!{tableModel.columnNameCN.get($foreach.index)} #if($!{tableModel.columnComment.get($foreach.index)}&&$!{tableModel.columnNameCN.get($foreach.index)}!=$!{tableModel.columnComment.get($foreach.index)})$!{tableModel.columnComment.get($foreach.index)}#end
+	 
+	 */
+	public $!{tableModel.javaType.get($foreach.index)} get$!stringUtil.capitalize($fieldName)() {
+		return this.$!stringUtil.uncapitalize($fieldName);
+	}
+	/**
+     * @param $!stringUtil.uncapitalize($fieldName) -	$!{tableModel.columnNameCN.get($foreach.index)} #if($!{tableModel.columnComment.get($foreach.index)}&&$!{tableModel.columnNameCN.get($foreach.index)}!=$!{tableModel.columnComment.get($foreach.index)})$!{tableModel.columnComment.get($foreach.index)}#end
+	
+	 */
+	public void set$!stringUtil.capitalize($fieldName)($!{tableModel.javaType.get($foreach.index)} $!stringUtil.uncapitalize($fieldName)) {
+		this.$!stringUtil.uncapitalize($fieldName) = $!stringUtil.uncapitalize($fieldName);
+	}
+	/**
+	 *仅用于查询
+     * @return $!{tableModel.columnNameCN.get($foreach.index)}  时间范围查询开始时间
+	 */
+	public $!{tableModel.javaType.get($foreach.index)} get$!stringUtil.capitalize($fieldName)Starttime() {
+		return this.$!stringUtil.uncapitalize($fieldName)Starttime;
+	}
+	/**
+	 *仅用于查询
+     * @return $!{tableModel.columnNameCN.get($foreach.index)} 时间范围查询的结束时间
+	 */
+	public $!{tableModel.javaType.get($foreach.index)} get$!stringUtil.capitalize($fieldName)Endtime() {
+		return this.$!stringUtil.uncapitalize($fieldName)Endtime;
+	}
+	/**
+	 *仅用于查询
+     * @param $!stringUtil.uncapitalize($fieldName)Starttime - 时间范围查询开始时间
+	 */
+	public void set$!stringUtil.capitalize($fieldName)Starttime($!{tableModel.javaType.get($foreach.index)} $!stringUtil.uncapitalize($fieldName)Starttime) {
+		this.$!stringUtil.uncapitalize($fieldName)Starttime = $!stringUtil.uncapitalize($fieldName)Starttime;
+	}
+	/**
+	 *仅用于查询
+     * @param $!stringUtil.uncapitalize($fieldName)Endtime - 时间范围查询的结束时间
+	 */
+	public void set$!stringUtil.capitalize($fieldName)Endtime($!{tableModel.javaType.get($foreach.index)} $!stringUtil.uncapitalize($fieldName)Endtime) {
+		this.$!stringUtil.uncapitalize($fieldName)Endtime = $!stringUtil.uncapitalize($fieldName)Endtime;
+	}
+#else
+	/**
+     * @return $!{tableModel.columnNameCN.get($foreach.index)} #if($!{tableModel.columnComment.get($foreach.index)}&&$!{tableModel.columnNameCN.get($foreach.index)}!=$!{tableModel.columnComment.get($foreach.index)})$!{tableModel.columnComment.get($foreach.index)}#end
+	
+	 */
+	public $!{tableModel.javaType.get($foreach.index)} get$!stringUtil.capitalize($fieldName)() {
+		return this.$!stringUtil.uncapitalize($fieldName);
+	}
+	/**
+     * @param $!stringUtil.uncapitalize($fieldName) -	$!{tableModel.columnNameCN.get($foreach.index)} #if($!{tableModel.columnComment.get($foreach.index)}&&$!{tableModel.columnNameCN.get($foreach.index)}!=$!{tableModel.columnComment.get($foreach.index)})$!{tableModel.columnComment.get($foreach.index)}#end
+	
+	 */
+	public void set$!stringUtil.capitalize($fieldName)($!{tableModel.javaType.get($foreach.index)} $!stringUtil.uncapitalize($fieldName)) {
+		this.$!stringUtil.uncapitalize($fieldName) = $!stringUtil.uncapitalize($fieldName);
+	}
+#end
+#end
+}
+

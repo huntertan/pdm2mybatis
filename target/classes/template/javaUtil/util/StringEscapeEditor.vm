@@ -1,0 +1,68 @@
+package $!{base_package}.util;
+
+import java.beans.PropertyEditorSupport;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.web.util.HtmlUtils;
+
+/**
+ * 描述 :
+ * 
+ * <pre>
+ * +--------------------------------------------------------------------
+ * 更改历史
+ * 更改时间		 更改人		目标版本		更改内容
+ * +--------------------------------------------------------------------
+ * 2012-6-15       zhiqi.zhou 		1.00	 	创建
+ * </pre>
+ * 
+ * @author zhiqi.zhou
+ */
+public class StringEscapeEditor extends PropertyEditorSupport {
+    private static final Log log = LogFactory.getLog(StringEscapeEditor.class);
+    private boolean escapeHTML;
+    private boolean escapeJavaScript;
+    private boolean escapeSQL;
+
+    public StringEscapeEditor() {
+        super();
+    }
+
+    public StringEscapeEditor(boolean escapeHTML, boolean escapeJavaScript, boolean escapeSQL) {
+        super();
+        this.escapeHTML = escapeHTML;
+        this.escapeJavaScript = escapeJavaScript;
+        this.escapeSQL = escapeSQL;
+    }
+
+    @Override
+    public void setAsText(String text) {
+        if (text == null) {
+            setValue(null);
+        } else {
+            String value = text;
+            if (escapeHTML) {
+                value = HtmlUtils.htmlEscape(value);
+            }
+            if (escapeJavaScript) {
+                value = StringEscapeUtils.escapeJavaScript(value);
+            }
+            if (escapeSQL) {
+                value = StringEscapeUtils.escapeSql(value);
+            }
+            setValue(value);
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(HtmlUtils.htmlEscape("<a>&周 ;select * from a;update a set id=1 where id=4;"));
+    }
+
+    @Override
+    public String getAsText() {
+        Object value = getValue();
+        return value != null ? value.toString() : "";
+    }
+}

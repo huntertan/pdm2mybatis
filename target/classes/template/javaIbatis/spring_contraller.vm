@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="$!{tableModel.tableName}">
+	<typeAlias alias="$!stringUtil.uncapitalize($!{tableModel.tableName})" type="$!{base_package}.$!{pojo_package}.$!{tableModel.tableName}" />
+	<delete id="deleteById" parameterClass="$!{tableModel.pkJavaType}">
+		delete from $!{tableModel.tableNameOriginal} where $!{tableModel.pk}=#$!{tableModel.pk}#
+     </delete>
+	 <select id="selectById" parameterClass="$!{tableModel.pkJavaType}"
+		resultClass="$!stringUtil.uncapitalize($!{tableModel.tableName})">
+		<include refid="selectAll" />
+		where $!{tableModel.pk}=#$!{tableModel.pk}#
+	</select>
+	<sql id="selectAll">
+		select #foreach($fieldName in $tableModel.columnName)${tableModel.columnNameOriginal.get($foreach.index)} as $fieldName#if($foreach.count!=$tableModel.columnName.size()),#end#end
+		from $!{tableModel.tableNameOriginal}
+    </sql>
+
+	<insert id="insert" parameterClass="$!stringUtil.uncapitalize($!{tableModel.tableName})">
+		insert into $!{tableModel.tableNameOriginal} (#foreach($fieldName in $tableModel.columnName)${tableModel.columnNameOriginal.get($foreach.index)}#if($foreach.count!=$tableModel.columnName.size()),#end#end)
+		values( #foreach($fieldName in $tableModel.columnName)#${fieldName}# #if($foreach.count!=$tableModel.columnName.size()),#end#end)
+    </insert>
+
+	<update id="update" parameterClass="$!stringUtil.uncapitalize($!{tableModel.tableName})">
+		update $!{tableModel.tableNameOriginal} set $!{tableModel.pk}=#$!{tableModel.pk}#
+		<dynamic prepend="">
+#foreach($fieldName in $tableModel.columnName)
+			<isNotEmpty property="$fieldName" prepend=",">
+				<![CDATA[${tableModel.columnNameOriginal.get($foreach.index)}=#$fieldName#]]>
+			</isNotEmpty>
+#end
+		</dynamic>
+		where $!{tableModel.pk}=#$!{tableModel.pk}#
+	</update>
+	
+	<select id="selectList" parameterClass="$!stringUtil.uncapitalize($!{tableModel.tableName})"
+		resultClass="$!stringUtil.uncapitalize($!{tableModel.tableName})">
+		<include refid="selectAll" />
+		where 1=1
+		<dynamic prepend="">
+#foreach($fieldName in $tableModel.columnName)
+			<isNotEmpty property="$fieldName" prepend=",">
+				<![CDATA[${tableModel.columnNameOriginal.get($foreach.index)}=#$fieldName#]]>
+			</isNotEmpty>
+			<isNotEmpty property="$fieldName" prepend="and">
+				<![CDATA[${tableModel.columnNameOriginal.get($foreach.index)}=#$fieldName#]]>
+			</isNotEmpty>
+#end
+			<isNotEmpty property="order" prepend="">
+				<![CDATA[ order by $order$ ]]>
+			</isNotEmpty>
+			<isNotEmpty property="start" prepend="">
+	    		limit #start#,#size#
+	    	</isNotEmpty>
+		</dynamic>
+	</select>
+
+
+	<select id="selectCount" parameterClass="$!stringUtil.uncapitalize($!{tableModel.tableName})"
+		resultClass="java.lang.Integer">
+		select count(1) from $!{tableModel.tableNameOriginal} where 1=1
+		<dynamic prepend="">
+#foreach($fieldName in $tableModel.columnName)
+			<isNotEmpty property="$fieldName" prepend=",">
+				<![CDATA[${tableModel.columnNameOriginal.get($foreach.index)}=#$fieldName#]]>
+			</isNotEmpty>
+			<isNotEmpty property="$fieldName" prepend="and">
+				<![CDATA[${tableModel.columnNameOriginal.get($foreach.index)}=#$fieldName#]]>
+			</isNotEmpty>
+#end
+		</dynamic>
+	</select>
+</sqlMap>

@@ -1,0 +1,97 @@
+package $!{base_package}.$!{service_package}.impl;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import $!{base_package}.${dao_package}.$!{tableModel.tableName}Mapper;
+import $!{base_package}.$!{pojo_package}.$!{tableModel.tableName};
+import $!{base_package}.$!{service_package}.$!{tableModel.tableName}Service;
+
+@Service
+@Lazy
+public class $!{tableModel.tableName}ServiceImpl implements $!{tableModel.tableName}Service {
+	
+	private static final Logger logger = LoggerFactory.getLogger($!{tableModel.tableName}ServiceImpl.class);
+	@Autowired
+	private $!{tableModel.tableName}Mapper $!stringUtil.uncapitalize($!{tableModel.tableName})Mapper;
+#if(${tableModel.pkJavaType}!='')
+	@Override
+	@Transactional
+    public int deleteByPrimaryKey(${tableModel.pkJavaType} ${tableModel.formatPK}){
+		if (${tableModel.formatPK}==null) {
+            return 0;
+        }
+		return $!{stringUtil.uncapitalize(${tableModel.tableName})}Mapper.deleteByPrimaryKey(${tableModel.formatPK});
+	}
+#end
+	@Override
+	@Transactional
+    public $!{tableModel.pkJavaType} insert($!{tableModel.tableName} record){
+		return $!{stringUtil.uncapitalize(${tableModel.tableName})}Mapper.insert(record);
+	}
+
+    @Override
+	@Transactional
+    public $!{tableModel.pkJavaType} insertSelective($!{tableModel.tableName} record){
+		return $!{stringUtil.uncapitalize(${tableModel.tableName})}Mapper.insertSelective(record);
+	}
+#if(${tableModel.pkJavaType}!='')
+    @Override
+    public $!{tableModel.tableName} selectByPrimaryKey(${tableModel.pkJavaType} ${tableModel.formatPK}){
+		if (${tableModel.formatPK}==null) {
+            return null;
+        }
+		return $!{stringUtil.uncapitalize(${tableModel.tableName})}Mapper.selectByPrimaryKey(${tableModel.formatPK});
+	}
+#end
+#if(${tableModel.pkJavaType}!='')
+    @Override
+	@Transactional
+    public int updateByPrimaryKeySelective($!{tableModel.tableName} record){
+		return $!{stringUtil.uncapitalize(${tableModel.tableName})}Mapper.updateByPrimaryKeySelective(record);
+	}
+#end
+#if(${tableModel.pkJavaType}!='')
+    @Override
+	@Transactional
+    public int updateByPrimaryKey($!{tableModel.tableName} record){
+		return $!{stringUtil.uncapitalize(${tableModel.tableName})}Mapper.updateByPrimaryKey(record);
+	}
+#end
+    @Override
+    public List<$!{tableModel.tableName}> findAll(){
+		return $!{stringUtil.uncapitalize(${tableModel.tableName})}Mapper.findAll();
+	}
+
+	
+	/**
+     * @param $!{tableModel.tableName} 
+     * @return
+     */
+    @Override
+    public int getCount($!{tableModel.tableName} $!{stringUtil.uncapitalize($!{tableModel.tableName})}){
+		return $!{stringUtil.uncapitalize(${tableModel.tableName})}Mapper.getCount($!{stringUtil.uncapitalize($!{tableModel.tableName})});
+	}
+	
+	/**
+     * @param $!{stringUtil.uncapitalize($!{tableModel.tableName})}
+	 * @param orderBy 排序
+     * @param start 开始行
+     * @param size 取多少条
+     * @return
+     */
+    @Override
+	public List<$!{tableModel.tableName}> selectList($!{tableModel.tableName} $!{stringUtil.uncapitalize($!{tableModel.tableName})},String orderBy, Integer start, Integer size){
+        return $!{stringUtil.uncapitalize($!{tableModel.tableName})}Mapper.selectList($!{stringUtil.uncapitalize($!stringUtil.uncapitalize($!{tableModel.tableName}))}, orderBy, start, size);
+	}
+	
+}

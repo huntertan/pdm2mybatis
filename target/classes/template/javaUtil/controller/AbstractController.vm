@@ -1,0 +1,45 @@
+package $!{base_package}.controller;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+
+import $!{base_package}.util.StringEscapeEditor;
+
+/**
+ * 描述 :
+ * 
+ * <pre>
+ * +--------------------------------------------------------------------
+ * 更改历史
+ * 更改时间		 更改人		目标版本		更改内容
+ * +--------------------------------------------------------------------
+ * 2012-6-15       zhiqi.zhou 		1.00	 	创建
+ * </pre>
+ * 
+ * @author zhiqi.zhou
+ */
+public abstract class AbstractController {
+    private static final Log log = LogFactory.getLog(AbstractController.class);
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(String.class, new StringEscapeEditor(true, false, false));
+    }
+
+    /**
+     * 以防止以后将session换成memecache,故session都在此处获取,以便将来好改
+     * 
+     * @param request
+     * @param response
+     * @return
+     */
+    public HttpSession getSession(HttpServletRequest request, HttpServletResponse response) {
+        return request.getSession();
+    }
+}

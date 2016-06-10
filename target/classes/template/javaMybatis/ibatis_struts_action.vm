@@ -1,0 +1,94 @@
+package $!{base_package}.web.action.admin;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import net.sf.json.JSONArray;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import $!{base_package}.GameConstant;
+import $!{base_package}.domain.$!stringUtil.capitalize($!{tableModel.tableName});
+import $!{base_package}.$!{service_package}.$!{stringUtil.capitalize($!{tableModel.tableName})}DAO;
+import $!{base_package}.util.BaseAction;
+import $!{base_package}.util.NetEaseJsonConfig;
+import $!{base_package}.util.PageController;
+import $!{base_package}.util.RequestUtil;
+
+@Scope("prototype")
+@Controller
+public class $!stringUtil.capitalize($!{tableModel.tableName})Action extends BaseAction {
+
+	private static final long serialVersionUID = 1L;
+	private static final Log log = LogFactory.getLog($!{stringUtil.capitalize($!{tableModel.tableName})}Action.class);
+	
+	private $!stringUtil.capitalize($!{tableModel.tableName}) $!stringUtil.uncapitalize($!{tableModel.tableName}) = new $!stringUtil.capitalize($!{tableModel.tableName})();
+	
+	public $!stringUtil.capitalize($!{tableModel.tableName}) get$!stringUtil.capitalize($!{tableModel.tableName})() {
+		return $!stringUtil.uncapitalize($tableModel.tableName);
+	}
+	
+	public void set$!stringUtil.capitalize($!{tableModel.tableName})($!{tableModel.tableName} $!stringUtil.uncapitalize($!{tableModel.tableName})) {
+		this.$!stringUtil.uncapitalize($!{tableModel.tableName}) = $!stringUtil.uncapitalize($!{tableModel.tableName});
+	}
+	
+	public String save() {
+        GameConstant.FACADE.get$!{tableModel.tableName}DAOImpl().saveOrUpdate($!stringUtil.uncapitalize($!{tableModel.tableName}));
+        return SUCCESS;
+    }
+
+    public String list() {
+        $!{tableModel.tableName}DAO $!stringUtil.uncapitalize($!{tableModel.tableName})DAO = GameConstant.FACADE.get$!{tableModel.tableName}DAOImpl();
+        if ($!stringUtil.uncapitalize($!{tableModel.tableName}) == null) {
+            $!stringUtil.uncapitalize($!{tableModel.tableName}) = new $!{tableModel.tableName}();
+        }
+        page = new PageController(totalRows, currentPage);
+        List<$!{tableModel.tableName}> datas = $!{stringUtil.uncapitalize($!{tableModel.tableName})}DAO.getList($!{stringUtil.uncapitalize($!{tableModel.tableName})}, page);
+		NetEaseJsonConfig netEaseJsonConfig = new NetEaseJsonConfig();
+        listJSON = JSONArray.fromObject(datas, netEaseJsonConfig).toString();
+        return SUCCESS;
+    }
+
+    public String edit() {
+        if ($!stringUtil.uncapitalize($!{tableModel.tableName}) != null) {
+            $!{tableModel.tableName}DAO $!stringUtil.uncapitalize($!{tableModel.tableName})DAO = GameConstant.FACADE.get$!{tableModel.tableName}DAOImpl();
+            $!stringUtil.uncapitalize($!{tableModel.tableName}) = $!{stringUtil.uncapitalize($!{tableModel.tableName})}DAO.getById($!{stringUtil.uncapitalize($!{tableModel.tableName})}.getId());
+        }
+        return SUCCESS;
+    }
+
+    public String operat() {
+        HttpServletRequest request = getRequest();
+        String action = getRequest().getParameter("operate");
+        String[] keys = getRequest().getParameterValues("mark");
+        if (RequestUtil.getValue(request, "grade").equals("editor") && "recycle".equals(action)) {
+            renderScriptText("您没有删除数据的权限！", getRequest().getHeader("REFERER"));
+        }
+        if ("recycle".equals(action)) {
+            for (int i = 0; keys != null && i < keys.length; i++) {
+                String productid = keys[i];
+                GameConstant.FACADE.get$!{tableModel.tableName}DAOImpl().deleteById(#if('java.lang.Integer'==${tableModel.pkJavaType})Integer.valueOf(productid)#{else}productid#end);
+            }
+        }#* else if (action.equals("publish")) {
+            for (int i = 0; keys != null && i < keys.length; i++) {
+                String productid = keys[i];
+                $!stringUtil.uncapitalize($!{tableModel.tableName}) = new $!{tableModel.tableName}();
+                $!{stringUtil.uncapitalize($!{tableModel.tableName})}.setId(#if('java.lang.Integer'==${tableModel.pkJavaType})Integer.valueOf(productid)#{else}productid#end);
+                GameConstant.FACADE.get$!{tableModel.tableName}DAOImpl().update($!stringUtil.uncapitalize($!{tableModel.tableName}));
+            }
+        } else if (action.equals("noPublish")) {
+            for (int i = 0; keys != null && i < keys.length; i++) {
+                String productid = keys[i];
+                $!stringUtil.uncapitalize($!{tableModel.tableName}) = new $!{tableModel.tableName}();
+                $!{stringUtil.uncapitalize($!{tableModel.tableName})}.setId(#if('java.lang.Integer'==${tableModel.pkJavaType})Integer.valueOf(productid)#{else}productid#end);
+                GameConstant.FACADE.get$!{tableModel.tableName}DAOImpl().update($!stringUtil.uncapitalize($!{tableModel.tableName}));
+            }
+        }
+*#
+        return SUCCESS;
+    }
+}

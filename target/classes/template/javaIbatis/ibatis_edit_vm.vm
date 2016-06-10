@@ -1,0 +1,86 @@
+<!Doctype html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK" />
+<title>$!{projct_name_zh}管理后台</title> 
+\#include("/admin/inc/cssjs.vm")
+<link href="/newgame/css/panel.css" rel="stylesheet" type="text/css" />
+<link href="/newgame/js/css/jquery-ui-1.7.2.custom.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/newgame/js/jquery-1.3.2.js"></script>
+<script type="text/javascript" src="/newgame/js/jquery-ui-1.7.2.custom.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="/newgame/js/kindeditor.js"></script>
+<script language="javascript" src="/js/FormValidation.js"></script>
+<script language="javascript" src="/newgame/js/calendar.js"></script>
+<script language="javascript" src="/newgame/js/main.js"></script>
+<script language="javascript" src="/newgame/js/date/WdatePicker.js"></script>
+<script type="text/javascript">
+\#if($success&&$success=="1")
+	alert('保存成功!');
+\#end
+function saveform(status){
+	jQuery('#status').val(status);
+	jQuery('#savegame').submit();
+}
+function deleteProperty(property){
+	jQuery(property).parent().parent().remove();
+}
+jQuery(function(){
+	jQuery('#addProperty').click(function(){
+		var oneProperty = jQuery('#propertyContent').clone();
+		jQuery('#propertyList').append(oneProperty.html());
+	});
+	//jQuery("#savegame").validationEngine();
+});
+
+</script>
+<style type="text/css">
+<!--
+.panelBox table {
+	border-bottom: none;
+}
+input{
+	width:500px;
+}
+-->
+</style>
+</head>
+<body>
+  <div style="position: relative">
+	 <div class="nav_bar">
+		当前位置：$!{projct_name_zh} &gt; <a href="/admin/$!{stringUtil.uncapitalize($!{tableModel.tableName})}List.action">$tableModel.tableNameCN </a>&gt; 添加/编辑
+	</div>
+#set($preFix="$!!")
+	<form action="/admin/$!{stringUtil.uncapitalize($!{tableModel.tableName})}Save.action"	method="post" id="savegame" enctype="multipart/form-data">
+		<input type="hidden" id="status" name="status" value="1"/>
+		<input type="hidden" id="$!{tableModel.pk}" name="$!{stringUtil.uncapitalize($!{tableModel.tableName})}.$!{tableModel.pk}" value="$preFix{$!{stringUtil.uncapitalize($!{tableModel.tableName})}.${tableModel.pk}}"/>
+		<div style="border: solid, 1px;" class="panelBox">
+			<div class="headTitle">
+				$tableModel.tableNameCN
+				<span class="error" style="font-size:">$\!errorMsg</span>
+			</div>
+        <fieldset>
+        <!--validate="empty:true" msg="不能为空！"-->
+        <table cellspacing="1" cellpadding="2" border="0" width="100%" class="info" id="propertyList">
+#foreach($fieldName in $tableModel.columnName)
+#if(${tableModel.pk}!=$fieldName)
+		<tr>
+			<td>
+			<label>$!{tableModel.columnNameCN.get($foreach.index)}：</label>
+			#if($tableModel.columnType.get($foreach.index).contains('time')||$tableModel.columnType.get($foreach.index).contains('date'))<input type="text" id="$fieldName"  class="Wdate" name="$!{stringUtil.uncapitalize($!{tableModel.tableName})}.${fieldName}"  value="${preFix}{date.DateToString($preFix{$!{stringUtil.uncapitalize($!{tableModel.tableName})}.${fieldName}},'yyyy-MM-dd HH:mm:ss')}" onclick="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'2099-01-01 00:00:00'})" />#else<input type="text" id="$fieldName" name="$!{stringUtil.uncapitalize($!{tableModel.tableName})}.${fieldName}"  value="$preFix{$!{stringUtil.uncapitalize($!{tableModel.tableName})}.${fieldName}}" />#end
+			
+			</td>
+		</tr> 
+#end
+#end
+        </table>
+        </fieldset>
+		</div>
+    </form>
+			<div class="confirmBar" style="margin-left: 10px">
+				<input type="button" value="保存" onclick="saveform(0);" id="save" />
+				<input type="button" value="保存并发布" onclick="saveform(1);" id="save" />
+				<input type="reset" value="取消" />
+			</div>
+	</div>
+\#include("/admin/inc/footer.vm")
+</body>
+</html>

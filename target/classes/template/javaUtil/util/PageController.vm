@@ -1,0 +1,186 @@
+package $!{base_package}.util;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+/**
+ * 描述 :
+ * 
+ * <pre>
+ * +--------------------------------------------------------------------
+ * 更改历史
+ * 更改时间		 更改人		目标版本		更改内容
+ * +--------------------------------------------------------------------
+ * 2012-6-15       zhiqi.zhou 		1.00	 	创建
+ * </pre>
+ * 
+ * @author zhiqi.zhou
+ */
+public class PageController {
+    private static final Log log = LogFactory.getLog(PageController.class);
+
+    /** 总行数 */
+    private int totalCount;
+
+    /** 每页行数 */
+    private int pageSize = 20;
+
+    /** 总页数 */
+    private int totalPages;
+
+    /** 当前页码 */
+    private int currentPage = 1;
+
+    /** 下一页 */
+    private int nextPage;
+
+    /** 上一页 */
+    private int previousPage;
+
+    /** 是否有下一页 */
+    private boolean hasNext;
+
+    /** 是否有上一页 */
+    private boolean hasPrevious;
+
+    /** 当前页开始行 */
+    private int pageStartRow;
+
+    /** 当前页结束行 */
+    private int pageEndRow;
+
+    /**
+     * 构造函数。
+     * 
+     * @param totalRows 总行数
+     */
+    public PageController(int totalRows, int currentPage) {
+        setPageController(totalRows, currentPage);
+    }
+
+    public static void main(String[] args) {
+        PageController pageController = new PageController(1, 1);
+        System.out.println(pageController.description());
+    }
+
+    public PageController(int totalRows, int currentPage, int pageSize) {
+        this.pageSize = pageSize;
+        this.setPageController(totalRows, currentPage);
+    }
+
+    public void setPageController(int totalRows, int currentPage) {
+
+        setTotalCount(totalRows);
+        setCurrentPage(currentPage);
+    }
+
+    /**
+     * 设置总行数。
+     * 
+     * @param i 总行数。
+     */
+    private void setTotalCount(int rows) {
+
+        if (rows < 0) {
+            totalCount = 0;
+        } else {
+            totalCount = rows;
+        }
+
+        if (totalCount % pageSize == 0) {
+            totalPages = totalCount / pageSize;
+        } else {
+            totalPages = totalCount / pageSize + 1;
+        }
+    }
+
+    /**
+     * 设置当前页数。
+     * 
+     * @param i
+     */
+    private void setCurrentPage(int curPage) {
+
+        if (curPage <= 0) {
+            currentPage = 1;
+        } else if (curPage > totalPages && totalPages != 0) {
+            currentPage = totalPages;
+        } else {
+            currentPage = curPage;
+        }
+
+        if (currentPage <= 1) {
+            hasPrevious = false;
+        } else {
+            hasPrevious = true;
+        }
+
+        if (currentPage == totalPages) {
+            hasNext = false;
+        } else {
+            hasNext = true;
+        }
+
+        nextPage = currentPage + 1;
+        previousPage = currentPage - 1;
+
+        // 计算当前页开始行和结束行
+        if (currentPage != totalPages) {
+            pageStartRow = (currentPage - 1) * pageSize + 1;
+        } else {
+            pageStartRow = (currentPage - 1) * pageSize + 1;
+        }
+        // 记录索引从0开始
+        pageStartRow -= 1;
+        pageEndRow = pageStartRow + pageSize;
+
+    }
+
+    public int getCurrentPage() {
+        return currentPage;
+    }
+
+    public boolean isHasNext() {
+        return hasNext;
+    }
+
+    public boolean isHasPrevious() {
+        return hasPrevious;
+    }
+
+    public int getNextPage() {
+        return nextPage;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public int getPreviousPage() {
+        return previousPage;
+    }
+
+    public int getTotalPages() {
+        return totalPages;
+    }
+
+    public int getTotalCount() {
+        return totalCount;
+    }
+
+    public int getPageStartRow() {
+        return pageStartRow;
+    }
+
+    public int getPageEndRow() {
+        return pageEndRow;
+    }
+
+    public String description() {
+        String description = "TotalRowsAmount : " + this.getTotalCount() + " TotalPages :" + this.getTotalPages()
+                + "  Current page:" + this.currentPage + " Previous " + this.hasPrevious + " Next:" + this.hasNext
+                + " start row:" + this.pageStartRow + " end row:" + this.pageEndRow;
+        return description;
+    }
+
+}
