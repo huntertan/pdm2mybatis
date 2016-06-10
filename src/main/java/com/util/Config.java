@@ -23,6 +23,7 @@ public class Config {
 
     static {
         try {
+
             config = new PropertiesConfiguration("conf.properties");
 
             typeConvert = new PropertiesConfiguration();
@@ -57,5 +58,10 @@ public class Config {
             map.put(key.replaceAll("\\.", "_"), config.getString(key));
         }
         return map;
+    }
+
+    public static void main(String[] args) {
+        String path = Config.class.getClass().getResource("/").getPath();
+        System.out.println(path);
     }
 }

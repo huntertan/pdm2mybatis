@@ -20,6 +20,11 @@
 		<skipTests>true</skipTests>
     </properties>
 	<dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+        </dependency>
 		<dependency>
 			<groupId>dom4j</groupId>
 			<artifactId>dom4j</artifactId>
@@ -144,4 +149,38 @@
 			<version>0.9.1.2</version>
 		</dependency>
 	</dependencies>
+
+    <profiles>
+        <profile>
+            <id>local</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <package.environment>local</package.environment>
+            </properties>
+        </profile>
+    </profiles>
+
+    <build>
+    <plugins>
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+            <archive>
+                <addMavenDescriptor>false</addMavenDescriptor>
+            </archive>
+            <webResources>
+                <resource>
+                    <!-- this is relative to the pom.xml directory -->
+                    <directory>src/main/resources/${package.environment}</directory>
+                    <targetPath>WEB-INF/classes</targetPath>
+                    <filtering>true</filtering>
+                </resource>
+            </webResources>
+        </configuration>
+    </plugin>
+        </plugins>
+    </build>
 </project>
