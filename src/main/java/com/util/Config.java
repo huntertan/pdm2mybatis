@@ -24,7 +24,7 @@ public class Config {
     static {
         try {
 
-            config = new PropertiesConfiguration("conf.properties");
+            config = new PropertiesConfiguration("conf.propertiese");
 
             typeConvert = new PropertiesConfiguration();
             typeConvert.setIOFactory(new WhitespaceIOFactory());
@@ -61,7 +61,7 @@ public class Config {
     }
 
     public static void main(String[] args) {
-        String path = Config.class.getClass().getResource("/").getPath();
+        String path = Config.class.getClass().getResource("").getPath();
         System.out.println(path);
     }
 }
