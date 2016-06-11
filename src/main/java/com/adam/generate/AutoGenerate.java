@@ -82,10 +82,10 @@ public class AutoGenerate {
     private static Pdm2JavaConfig pdm2JavaConfig;
     private static String BASE_PATH = Config.get("project_path");
     private static String BASE_PACKAGE = Config.get("base_package") + "";
-    private static String ADMIN_VM_VIEW_BASE_PATH = BASE_PATH + "/src/main/webapp/WEB-INF/views/" + ADMIN_PATH_NAME
+    private static String ADMIN_VM_VIEW_BASE_PATH = BASE_PATH + ADMIN_PATH_NAME
             + "/";
     private static String FRAMEWORK = Config.get("framework");
-    private static String JAVA_BASE_PATH = BASE_PATH + "/src/main/java/" + BASE_PACKAGE.replace('.', '/') + "/";
+    private static String JAVA_BASE_PATH = BASE_PATH + BASE_PACKAGE.replace('.', '/') + "/";
     private static String RESOURCES_BASE_PATH = BASE_PATH + "/src/main/resources/" + BASE_PACKAGE.replace('.', '/')
             + "/";
     private static String CLASS_BASE_PATH = null;

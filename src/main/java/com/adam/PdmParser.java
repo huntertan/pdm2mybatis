@@ -413,14 +413,21 @@ public class PdmParser implements PdmConst {
             }
             column.setDataType(dataType);
         }
-        children = columnElm.elementIterator((QName) this.qnames.get("a:Column.Mandatory"));
-        if (children.hasNext()) {
-            column.setMandatory(Integer.valueOf(((Element) children.next()).getText()).intValue());
+
+        Object mandatory = this.qnames.get("a:Column.Mandatory");
+        if(mandatory != null) {
+            children = columnElm.elementIterator((QName) mandatory);
+            if (children.hasNext()) {
+                column.setMandatory(Integer.valueOf(((Element) children.next()).getText()).intValue());
+            }
         }
 
-        children = columnElm.elementIterator((QName) this.qnames.get("a:Length"));
-        if (children.hasNext()) {
-            column.setLength(Integer.valueOf(((Element) children.next()).getText()).intValue());
+        Object aLength = this.qnames.get("a:Length");
+        if(null != aLength) {
+            children = columnElm.elementIterator((QName)aLength);
+            if (children.hasNext()) {
+                column.setLength(Integer.valueOf(((Element) children.next()).getText()).intValue());
+            }
         }
 
         return column;

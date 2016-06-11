@@ -23,12 +23,14 @@ public class Config {
 
     static {
         try {
-
-            config = new PropertiesConfiguration("conf.propertiese");
+            String path = Config.class.getResource("/").getPath();
+            path = path.replaceFirst("/","");
+            path = "";
+            config = new PropertiesConfiguration(path+"conf.properties");
 
             typeConvert = new PropertiesConfiguration();
             typeConvert.setIOFactory(new WhitespaceIOFactory());
-            typeConvert.setFile(new File("typeConvert.properties"));
+            typeConvert.setFile(new File(path+"typeConvert.properties"));
             typeConvert.load();
 
             // typeConvert = new PropertiesConfiguration("typeConvert.properties");
