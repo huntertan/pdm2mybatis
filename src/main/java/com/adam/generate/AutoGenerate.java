@@ -153,7 +153,7 @@ public class AutoGenerate {
 
     public static void initClassPath() throws Exception {
         URL url = AutoGenerate.class.getResource("/");
-        CLASS_BASE_PATH = URLDecoder.decode(url.getPath().substring(1, url.getPath().length()));
+        CLASS_BASE_PATH = URLDecoder.decode(url.getPath().substring(0, url.getPath().length()));
         System.out.println("CLASS_BASE_PATH=" + CLASS_BASE_PATH);
         System.out.println(url);
         System.out.println(AutoGenerate.class.getResource(""));
